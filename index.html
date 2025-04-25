@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>移动端</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .action-btn {
+        background: none;
+        border: none;
+        color: #00c2b3;
+        cursor: pointer;
+        margin-right: 8px;
+        padding: 2px 4px;
+        font-size: 14px;
+      }
+      .action-btn:hover {
+        text-decoration: underline;
+      }
+
+      .action-btn:disabled {
+        color: #999;
+        cursor: default;
+      }
+
+      .action-btn:disabled:hover {
+        text-decoration: none;
+      }
+
+      .approved-btn {
+        color: #666;
+      }
+
+      /* 弹窗样式 */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 100;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        overflow-y: auto;
+      }
+
+      .modal-content {
+        position: relative;
+        background-color: #f5f5f5;
+        margin: 20px auto;
+        padding: 0;
+        width: 90%;
+        max-width: 900px;
+        max-height: 90vh;
+        overflow-y: auto;
+        border-radius: 4px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        animation: modalopen 0.3s;
+      }
+
+      @keyframes modalopen {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        color: #999;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 10;
+      }
+
+      .modal-header {
+        padding: 16px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .modal-header h2 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 500;
+      }
+
+      .modal-body {
+        padding: 16px;
+        max-height: calc(90vh - 60px);
+        overflow-y: auto;
+      }
+
+      /* 数据视图样式 */
+      .data-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .data-card {
+        background-color: #fff;
+        border-radius: 4px;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .data-label {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 8px;
+      }
+
+      .data-value {
+        font-size: 24px;
+        color: #333;
+        font-weight: 500;
+      }
+
+      .data-value.highlight {
+        color: #00c2b3;
+      }
+
+      .plan-name {
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      /* 视频表格样式 */
+      .video-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .video-table th,
+      .video-table td {
+        padding: 12px 10px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+      }
+
+      .video-table th {
+        color: #666;
+        font-weight: normal;
+      }
+
+      .video-title {
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .status-approved {
+        color: #00c2b3;
+      }
+
+      .status-pending {
+        color: #ff9800;
+      }
+
+      .status-rejected {
+        color: #f44336;
+      }
+
+      /* 视频管理弹窗特殊样式 */
+      #videoModal .modal-content {
+        max-width: 1600px;
+        width: 95%;
+      }
+
+      @media (max-width: 768px) {
+        .data-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .modal-content {
+          width: 95%;
+          margin: 10px auto;
+        }
+      }
+
+      /* 发放星火币弹窗 */
+      .coin-modal {
+        display: none;
+        position: fixed;
+        z-index: 200;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .coin-modal-content {
+        position: relative;
+        background-color: #fff;
+        margin: 10% auto;
+        padding: 20px;
+        width: 90%;
+        max-width: 450px;
+        border-radius: 4px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        animation: modalopen 0.3s;
+      }
+
+      .coin-modal-title {
+        font-size: 16px;
+        margin-bottom: 20px;
+        font-weight: 500;
+      }
+
+      .coin-info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .coin-info-label {
+        color: #666;
+        font-size: 14px;
+      }
+
+      .coin-info-value {
+        font-weight: 500;
+        font-size: 14px;
+      }
+
+      .coin-input-row {
+        margin-top: 20px;
+      }
+
+      .coin-input-label {
+        display: block;
+        margin-bottom: 10px;
+        color: #333;
+        font-size: 14px;
+      }
+
+      .coin-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      .coin-modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+        gap: 10px;
+      }
+
+      .coin-btn {
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        border: none;
+      }
+
+      .coin-btn-cancel {
+        background-color: #f5f5f5;
+        color: #666;
+        border: 1px solid #ddd;
+      }
+
+      .coin-btn-confirm {
+        background-color: #00c2b3;
+        color: white;
+      }
+
+      /* 确认弹窗 */
+      .confirm-modal {
+        display: none;
+        position: fixed;
+        z-index: 300;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .confirm-modal-content {
+        position: relative;
+        background-color: #fff;
+        margin: 20% auto;
+        padding: 20px;
+        width: 80%;
+        max-width: 320px;
+        border-radius: 4px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        animation: modalopen 0.3s;
+        text-align: center;
+      }
+
+      .confirm-message {
+        margin-bottom: 20px;
+        font-size: 14px;
+      }
+
+      .confirm-actions {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      /* 视频链接样式 */
+      .video-link {
+        color: #00c2b3;
+        text-decoration: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        max-width: 200px;
+      }
+
+      .video-link:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>移动端</h1>
+      </header>
+
+      <div class="tab-bar">
+        <div class="tab active">
+          <span class="tab-indicator"></span>
+          发行人计划
+        </div>
+        <div class="tab-content">发行人计划</div>
+      </div>
+
+      <div class="action-bar">
+        <button class="add-btn">+ 添加</button>
+        <div class="date-picker">
+          <input type="text" value="2025-03-25" readonly />
+          <span class="arrow">→</span>
+          <input type="text" value="结束日期" readonly />
+        </div>
+        <div class="search-box">
+          <input type="text" placeholder="输入关键词进行搜索" />
+          <button class="search-btn">🔍</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>项目ID</th>
+              <th>发行计划名称</th>
+              <th>开始时间</th>
+              <th>截止时间</th>
+              <th>投稿平台</th>
+              <th>目标</th>
+              <th>奖金单价</th>
+              <th>单条视频奖金上限</th>
+              <th>推广预算</th>
+              <th>最小点赞数</th>
+              <th>必带话题</th>
+              <th>创建时间 ↑</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 示例数据行 -->
+            <tr>
+              <td>1</td>
+              <td>PRJ001</td>
+              <td>测试计划</td>
+              <td>2025-03-25 08:00</td>
+              <td>2025-04-25 23:59</td>
+              <td>抖音, 小红书</td>
+              <td>点赞量</td>
+              <td>0.5</td>
+              <td>100</td>
+              <td>10000</td>
+              <td>500</td>
+              <td>#测试话题#</td>
+              <td>2025-03-25 10:00</td>
+              <td>
+                <button class="action-btn edit-btn" data-id="1">编辑</button>
+                <button class="action-btn view-btn" data-id="1">
+                  查看数据
+                </button>
+                <button class="action-btn manage-btn" data-id="1">
+                  视频管理
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 无数据时显示 -->
+        <div class="empty-data" style="display: none">
+          <div class="empty-icon"></div>
+          <p>暂无数据</p>
+        </div>
+      </div>
+
+      <div class="pagination">
+        <span>当前页码:0-0条, 共0条 10条/页</span>
+        <div class="page-controls">
+          <button class="page-btn">&lt;</button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">&gt;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 查看数据弹窗 -->
+    <div id="dataModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" id="closeDataModal">&times;</span>
+        <div class="modal-header">
+          <h2>查看数据</h2>
+        </div>
+        <div class="modal-body">
+          <div class="plan-name" id="dataPlanName">测试计划</div>
+
+          <div class="data-grid">
+            <div class="data-card">
+              <div class="data-label">视频投稿数</div>
+              <div class="data-value" id="submissionCount">32</div>
+            </div>
+
+            <div class="data-card">
+              <div class="data-label">总点赞数</div>
+              <div class="data-value" id="totalLikes">128,475</div>
+            </div>
+
+            <div class="data-card">
+              <div class="data-label">总播放量</div>
+              <div class="data-value" id="totalViews">1,246,890</div>
+            </div>
+
+            <div class="data-card">
+              <div class="data-label">星火币预算</div>
+              <div class="data-value" id="budget">10,000</div>
+            </div>
+
+            <div class="data-card">
+              <div class="data-label">星火币余额</div>
+              <div class="data-value highlight" id="balance">4,325</div>
+            </div>
+
+            <div class="data-card">
+              <div class="data-label">星火币发放数</div>
+              <div class="data-value" id="distributed">5,675</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 视频管理弹窗 -->
+    <div id="videoModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" id="closeVideoModal">&times;</span>
+        <div class="modal-header">
+          <h2>视频管理</h2>
+        </div>
+        <div class="modal-body">
+          <div class="plan-name" id="videoPlanName">测试计划</div>
+
+          <div style="overflow-x: auto">
+            <table class="video-table">
+              <thead>
+                <tr>
+                  <th>视频名称</th>
+                  <th>发布用户名</th>
+                  <th>发布用户SCEID</th>
+                  <th>发布平台</th>
+                  <th>视频链接</th>
+                  <th>视频点赞数</th>
+                  <th>视频播放数</th>
+                  <th>视频获得的星火币数量</th>
+                  <th>已发放数量</th>
+                  <th>已消费数量</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="videoTableBody">
+                <!-- 视频列表会通过JavaScript动态生成 -->
+              </tbody>
+            </table>
+          </div>
+
+          <div
+            id="emptyPlaceholder"
+            class="empty-placeholder"
+            style="
+              display: none;
+              padding: 40px;
+              text-align: center;
+              color: #999;
+            "
+          >
+            暂无视频数据
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 发放星火币弹窗 -->
+    <div id="coinModal" class="coin-modal">
+      <div class="coin-modal-content">
+        <span class="close-btn" id="closeCoinModal">&times;</span>
+        <div class="coin-modal-title">发放星火币</div>
+
+        <div class="coin-info-row">
+          <span class="coin-info-label">视频点赞数</span>
+          <span class="coin-info-value" id="coinModalLikes">0</span>
+        </div>
+
+        <div class="coin-info-row">
+          <span class="coin-info-label">视频播放数</span>
+          <span class="coin-info-value" id="coinModalViews">0</span>
+        </div>
+
+        <div class="coin-info-row">
+          <span class="coin-info-label">应获得的星火币总数</span>
+          <span class="coin-info-value" id="coinModalEarned">0</span>
+        </div>
+
+        <div class="coin-info-row">
+          <span class="coin-info-label">已发放的星火币数量</span>
+          <span class="coin-info-value" id="coinModalPaid">0</span>
+        </div>
+
+        <div class="coin-info-row">
+          <span class="coin-info-label">星火币消费情况</span>
+          <span class="coin-info-value" id="coinModalConsumed">0</span>
+        </div>
+
+        <div class="coin-input-row">
+          <label for="coinInput" class="coin-input-label">发放新的星火币</label>
+          <input
+            type="number"
+            id="coinInput"
+            class="coin-input"
+            min="1"
+            max="10000"
+          />
+        </div>
+
+        <div class="coin-modal-actions">
+          <button class="coin-btn coin-btn-cancel" id="cancelCoin">取消</button>
+          <button class="coin-btn coin-btn-confirm" id="confirmCoin">
+            确认
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 确认弹窗 -->
+    <div id="confirmModal" class="confirm-modal">
+      <div class="confirm-modal-content">
+        <div class="confirm-message" id="confirmMessage">
+          是否发放 0 个星火币？
+        </div>
+        <div class="confirm-actions">
+          <button class="coin-btn coin-btn-cancel" id="cancelConfirm">
+            取消
+          </button>
+          <button class="coin-btn coin-btn-confirm" id="confirmAction">
+            确认
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

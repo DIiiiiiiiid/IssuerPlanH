@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>添加发行人计划</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .config-form {
+        background-color: #fff;
+        border-radius: 4px;
+        padding: 16px;
+        margin-bottom: 15px;
+      }
+      .form-group {
+        margin-bottom: 16px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: #333;
+      }
+      .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+      .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .checkbox-item {
+        display: flex;
+        align-items: center;
+        margin-right: 12px;
+      }
+      .checkbox-item input {
+        margin-right: 5px;
+      }
+      .radio-group {
+        display: flex;
+        gap: 15px;
+      }
+      .radio-item {
+        display: flex;
+        align-items: center;
+      }
+      .radio-item input {
+        margin-right: 5px;
+      }
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 24px;
+      }
+      .btn {
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        border: none;
+      }
+      .btn-cancel {
+        background-color: #f5f5f5;
+        color: #666;
+        border: 1px solid #ddd;
+      }
+      .btn-save {
+        background-color: #00c2b3;
+        color: white;
+      }
+      .page-title {
+        font-size: 18px;
+        padding: 16px 0;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-title" id="formTitle">添加发行人计划</div>
+
+      <form class="config-form">
+        <div class="form-group">
+          <label for="projectId">项目ID</label>
+          <input type="text" id="projectId" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label for="planName">发行计划名称</label>
+          <input type="text" id="planName" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label for="startTime">开始时间</label>
+          <input type="datetime-local" id="startTime" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label for="endTime">截止时间</label>
+          <input type="datetime-local" id="endTime" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>投稿平台（可多选）</label>
+          <div class="checkbox-group">
+            <div class="checkbox-item">
+              <input
+                type="checkbox"
+                id="platform1"
+                name="platform"
+                value="抖音"
+              />
+              <label for="platform1">抖音</label>
+            </div>
+            <div class="checkbox-item">
+              <input
+                type="checkbox"
+                id="platform2"
+                name="platform"
+                value="bilibili"
+              />
+              <label for="platform2">bilibili</label>
+            </div>
+            <div class="checkbox-item">
+              <input
+                type="checkbox"
+                id="platform3"
+                name="platform"
+                value="小红书"
+              />
+              <label for="platform3">小红书</label>
+            </div>
+            <div class="checkbox-item">
+              <input
+                type="checkbox"
+                id="platform4"
+                name="platform"
+                value="快手"
+              />
+              <label for="platform4">快手</label>
+            </div>
+            <div class="checkbox-item">
+              <input
+                type="checkbox"
+                id="platform5"
+                name="platform"
+                value="贴吧"
+              />
+              <label for="platform5">贴吧</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>目标（单选）</label>
+          <div class="radio-group">
+            <div class="radio-item">
+              <input
+                type="radio"
+                id="target1"
+                name="target"
+                value="点赞量"
+                checked
+              />
+              <label for="target1">点赞量</label>
+            </div>
+            <div class="radio-item">
+              <input type="radio" id="target2" name="target" value="播放量" />
+              <label for="target2">播放量</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="price">奖金单价</label>
+          <input
+            type="number"
+            id="price"
+            class="form-control"
+            min="0"
+            step="0.01"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="maxReward">单条视频奖金上限</label>
+          <input type="number" id="maxReward" class="form-control" min="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="budget">用来推广的预算（星火币）</label>
+          <input type="number" id="budget" class="form-control" min="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="minLikes">视频所需最小点赞数</label>
+          <input type="number" id="minLikes" class="form-control" min="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="requiredTopic">视频必须带上的话题</label>
+          <input type="text" id="requiredTopic" class="form-control" />
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-cancel" id="cancelBtn">
+            取消
+          </button>
+          <button type="submit" class="btn btn-save">保存</button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // 获取URL参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id");
+
+        // 如果存在ID参数，表示是编辑模式
+        if (id) {
+          document.getElementById("formTitle").textContent = "编辑发行人计划";
+          console.log("正在编辑ID:", id);
+
+          // 这里可以添加获取该ID对应数据的逻辑
+          // 然后填充表单
+          // 示例代码:
+          /*
+          fetch(`/api/plans/${id}`)
+            .then(response => response.json())
+            .then(data => {
+              document.getElementById('projectId').value = data.projectId;
+              document.getElementById('planName').value = data.planName;
+              // ... 填充其他字段
+            });
+          */
+
+          // 模拟数据填充
+          setTimeout(() => {
+            if (id === "1") {
+              document.getElementById("projectId").value = "PRJ001";
+              document.getElementById("planName").value = "测试计划";
+              document.getElementById("startTime").value = "2025-03-25T08:00";
+              document.getElementById("endTime").value = "2025-04-25T23:59";
+
+              // 选中平台
+              document.getElementById("platform1").checked = true; // 抖音
+              document.getElementById("platform3").checked = true; // 小红书
+
+              // 选中目标
+              document.getElementById("target1").checked = true; // 点赞量
+
+              document.getElementById("price").value = "0.5";
+              document.getElementById("maxReward").value = "100";
+              document.getElementById("budget").value = "10000";
+              document.getElementById("minLikes").value = "500";
+              document.getElementById("requiredTopic").value = "#测试话题#";
+            }
+          }, 100);
+        }
+
+        // 取消按钮返回列表页
+        document
+          .getElementById("cancelBtn")
+          .addEventListener("click", function () {
+            window.location.href = "index.html";
+          });
+
+        // 表单提交处理
+        document.querySelector("form").addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // 收集表单数据
+          const formData = {
+            id: id || null, // 如果存在ID，则包含在表单数据中
+            projectId: document.getElementById("projectId").value,
+            planName: document.getElementById("planName").value,
+            startTime: document.getElementById("startTime").value,
+            endTime: document.getElementById("endTime").value,
+            platforms: Array.from(
+              document.querySelectorAll('input[name="platform"]:checked')
+            ).map((el) => el.value),
+            target: document.querySelector('input[name="target"]:checked')
+              .value,
+            price: document.getElementById("price").value,
+            maxReward: document.getElementById("maxReward").value,
+            budget: document.getElementById("budget").value,
+            minLikes: document.getElementById("minLikes").value,
+            requiredTopic: document.getElementById("requiredTopic").value,
+          };
+
+          console.log("表单数据:", formData);
+          // 这里可以添加数据保存逻辑或API调用
+          // 如果是编辑模式，可以使用PUT方法更新数据
+          /*
+          if (id) {
+            fetch(`/api/plans/${id}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+              alert('更新成功!');
+              window.location.href = 'index.html';
+            });
+          } else {
+            // 添加新数据
+            fetch('/api/plans', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+              alert('保存成功!');
+              window.location.href = 'index.html';
+            });
+          }
+          */
+
+          // 保存成功后返回列表页
+          alert(id ? "更新成功!" : "保存成功!");
+          window.location.href = "index.html";
+        });
+      });
+    </script>
+  </body>
+</html>
