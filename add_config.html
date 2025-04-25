@@ -197,6 +197,37 @@
         <div class="form-group">
           <label for="budget">用来推广的预算（星火币）</label>
           <input type="number" id="budget" class="form-control" min="0" />
+
+          <div class="radio-group" style="margin-top: 10px">
+            <label
+              style="
+                display: block;
+                margin-bottom: 8px;
+                font-size: 14px;
+                color: #333;
+              "
+              >预算分类：</label
+            >
+            <div class="radio-item">
+              <input
+                type="radio"
+                id="budgetType1"
+                name="budgetType"
+                value="商业化收益"
+                checked
+              />
+              <label for="budgetType1">商业化收益</label>
+            </div>
+            <div class="radio-item">
+              <input
+                type="radio"
+                id="budgetType2"
+                name="budgetType"
+                value="购买"
+              />
+              <label for="budgetType2">购买</label>
+            </div>
+          </div>
         </div>
 
         <div class="form-group">
@@ -292,6 +323,9 @@
             price: document.getElementById("price").value,
             maxReward: document.getElementById("maxReward").value,
             budget: document.getElementById("budget").value,
+            budgetType: document.querySelector(
+              'input[name="budgetType"]:checked'
+            ).value,
             minLikes: document.getElementById("minLikes").value,
             requiredTopic: document.getElementById("requiredTopic").value,
           };
